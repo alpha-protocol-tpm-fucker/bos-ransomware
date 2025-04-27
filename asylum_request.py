@@ -19,8 +19,10 @@ except ModuleNotFoundError:
     subprocess.call([sys.executable, "-m", "pip", "install", "pypinyin"])
     from pypinyin import slug, Style
 
+
 def to_pinyin(text):
     return slug(text, style=Style.TONE, separator=" ", errors="ignore", strict=True).replace("u:", "ü")
+
 
 data = {
     "header": {"to": "首都机场（PEK）移民官员"},
@@ -90,65 +92,70 @@ eng = {
     "signature": "Sincerely,\n\nShang Bo",
 }
 
+
 def s(t):
     return t.replace("’", "'").replace("“", '"').replace("”", '"').replace("–", "-").replace("—", "-")
+
 
 def ruby(txt):
     return f"{txt}<br/><font size=8 color='grey'>({to_pinyin(txt)})</font>"
 
+
 def panda_engineer(sz=160):
     d = Drawing(sz, sz)
-    d.add(Ellipse(sz*0.5, sz*0.35, sz*0.32, sz*0.25, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Ellipse(sz*0.28, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
-    d.add(Ellipse(sz*0.72, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
-    d.add(Ellipse(sz*0.25, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
-    d.add(Ellipse(sz*0.75, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
-    d.add(Circle(sz*0.5, sz*0.7, sz*0.3, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*0.3, sz*0.92, sz*0.14, fillColor=colors.black))
-    d.add(Circle(sz*0.7, sz*0.92, sz*0.14, fillColor=colors.black))
-    d.add(Ellipse(sz*0.4, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
-    d.add(Ellipse(sz*0.6, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
-    d.add(Circle(sz*0.4, sz*0.73, sz*0.03, fillColor=colors.white))
-    d.add(Circle(sz*0.6, sz*0.73, sz*0.03, fillColor=colors.white))
-    d.add(Circle(sz*0.5, sz*0.63, sz*0.035, fillColor=colors.black))
-    d.add(Line(sz*0.5, sz*0.61, sz*0.48, sz*0.57, strokeColor=colors.black))
-    d.add(Line(sz*0.5, sz*0.61, sz*0.52, sz*0.57, strokeColor=colors.black))
-    d.add(Rect(sz*0.28, sz*0.77, sz*0.44, sz*0.08, fillColor=colors.lightgrey, strokeColor=colors.black))
-    d.add(Rect(sz*0.24, sz*0.77, sz*0.52, sz*0.03, fillColor=colors.darkgrey, strokeColor=None))
+    d.add(Ellipse(sz * 0.5, sz * 0.35, sz * 0.32, sz * 0.25, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Ellipse(sz * 0.28, sz * 0.18, sz * 0.12, sz * 0.08, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.72, sz * 0.18, sz * 0.12, sz * 0.08, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.25, sz * 0.35, sz * 0.09, sz * 0.06, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.75, sz * 0.35, sz * 0.09, sz * 0.06, fillColor=colors.black))
+    d.add(Circle(sz * 0.5, sz * 0.7, sz * 0.3, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz * 0.3, sz * 0.92, sz * 0.14, fillColor=colors.black))
+    d.add(Circle(sz * 0.7, sz * 0.92, sz * 0.14, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.4, sz * 0.73, sz * 0.08, sz * 0.11, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.6, sz * 0.73, sz * 0.08, sz * 0.11, fillColor=colors.black))
+    d.add(Circle(sz * 0.4, sz * 0.73, sz * 0.03, fillColor=colors.white))
+    d.add(Circle(sz * 0.6, sz * 0.73, sz * 0.03, fillColor=colors.white))
+    d.add(Circle(sz * 0.5, sz * 0.63, sz * 0.035, fillColor=colors.black))
+    d.add(Line(sz * 0.5, sz * 0.61, sz * 0.48, sz * 0.57, strokeColor=colors.black))
+    d.add(Line(sz * 0.5, sz * 0.61, sz * 0.52, sz * 0.57, strokeColor=colors.black))
+    d.add(Rect(sz * 0.28, sz * 0.77, sz * 0.44, sz * 0.08, fillColor=colors.lightgrey, strokeColor=colors.black))
+    d.add(Rect(sz * 0.24, sz * 0.77, sz * 0.52, sz * 0.03, fillColor=colors.darkgrey, strokeColor=None))
     for i in (0.36, 0.5, 0.64):
-        d.add(Line(sz*i, sz*0.77, sz*i, sz*0.85, strokeColor=colors.black, strokeWidth=1))
+        d.add(Line(sz * i, sz * 0.77, sz * i, sz * 0.85, strokeColor=colors.black, strokeWidth=1))
     return d
+
 
 def panda_bamboo(sz=160):
     d = Drawing(sz, sz)
-    d.add(Ellipse(sz*0.5, sz*0.35, sz*0.32, sz*0.25, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Ellipse(sz*0.28, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
-    d.add(Ellipse(sz*0.72, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
-    d.add(Ellipse(sz*0.25, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
-    d.add(Ellipse(sz*0.75, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
-    d.add(Circle(sz*0.5, sz*0.7, sz*0.3, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*0.3, sz*0.92, sz*0.14, fillColor=colors.black))
-    d.add(Circle(sz*0.7, sz*0.92, sz*0.14, fillColor=colors.black))
-    d.add(Ellipse(sz*0.4, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
-    d.add(Ellipse(sz*0.6, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
-    d.add(Circle(sz*0.4, sz*0.73, sz*0.03, fillColor=colors.white))
-    d.add(Circle(sz*0.6, sz*0.73, sz*0.03, fillColor=colors.white))
-    d.add(Circle(sz*0.5, sz*0.63, sz*0.035, fillColor=colors.black))
-    d.add(Line(sz*0.5, sz*0.61, sz*0.48, sz*0.57, strokeColor=colors.black))
-    d.add(Line(sz*0.5, sz*0.61, sz*0.52, sz*0.57, strokeColor=colors.black))
-    stalk_x = sz*0.15
-    segment_h = sz*0.12
+    d.add(Ellipse(sz * 0.5, sz * 0.35, sz * 0.32, sz * 0.25, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Ellipse(sz * 0.28, sz * 0.18, sz * 0.12, sz * 0.08, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.72, sz * 0.18, sz * 0.12, sz * 0.08, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.25, sz * 0.35, sz * 0.09, sz * 0.06, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.75, sz * 0.35, sz * 0.09, sz * 0.06, fillColor=colors.black))
+    d.add(Circle(sz * 0.5, sz * 0.7, sz * 0.3, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz * 0.3, sz * 0.92, sz * 0.14, fillColor=colors.black))
+    d.add(Circle(sz * 0.7, sz * 0.92, sz * 0.14, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.4, sz * 0.73, sz * 0.08, sz * 0.11, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.6, sz * 0.73, sz * 0.08, sz * 0.11, fillColor=colors.black))
+    d.add(Circle(sz * 0.4, sz * 0.73, sz * 0.03, fillColor=colors.white))
+    d.add(Circle(sz * 0.6, sz * 0.73, sz * 0.03, fillColor=colors.white))
+    d.add(Circle(sz * 0.5, sz * 0.63, sz * 0.035, fillColor=colors.black))
+    d.add(Line(sz * 0.5, sz * 0.61, sz * 0.48, sz * 0.57, strokeColor=colors.black))
+    d.add(Line(sz * 0.5, sz * 0.61, sz * 0.52, sz * 0.57, strokeColor=colors.black))
+    stalk_x = sz * 0.15
+    segment_h = sz * 0.12
     for j in range(5):
-        d.add(Rect(stalk_x, sz*0.15 + j*segment_h, sz*0.08, segment_h-2, fillColor=colors.green, strokeColor=colors.darkgreen))
-        d.add(Line(stalk_x, sz*0.15 + j*segment_h, stalk_x+sz*0.08, sz*0.15 + j*segment_h, strokeColor=colors.darkgreen, strokeWidth=1))
+        d.add(Rect(stalk_x, sz * 0.15 + j * segment_h, sz * 0.08, segment_h - 2, fillColor=colors.green, strokeColor=colors.darkgreen))
+        d.add(Line(stalk_x, sz * 0.15 + j * segment_h, stalk_x + sz * 0.08, sz * 0.15 + j * segment_h, strokeColor=colors.darkgreen, strokeWidth=1))
     leaves = [
-        [(stalk_x+sz*0.08, sz*0.55), (stalk_x+sz*0.18, sz*0.62), (stalk_x+sz*0.11, sz*0.66)],
-        [(stalk_x+sz*0.07, sz*0.42), (stalk_x+sz*0.17, sz*0.35), (stalk_x+sz*0.10, sz*0.31)],
+        [(stalk_x + sz * 0.08, sz * 0.55), (stalk_x + sz * 0.18, sz * 0.62), (stalk_x + sz * 0.11, sz * 0.66)],
+        [(stalk_x + sz * 0.07, sz * 0.42), (stalk_x + sz * 0.17, sz * 0.35), (stalk_x + sz * 0.10, sz * 0.31)],
     ]
     for leaf in leaves:
         d.add(Polygon([coord for point in leaf for coord in point], fillColor=colors.green, strokeColor=colors.darkgreen))
-    d.add(Ellipse(sz*0.23, sz*0.45, sz*0.1, sz*0.07, fillColor=colors.black))
+    d.add(Ellipse(sz * 0.23, sz * 0.45, sz * 0.1, sz * 0.07, fillColor=colors.black))
     return d
+
 
 def register_font():
     try:
@@ -171,29 +178,38 @@ def register_font():
             return "DejaVu"
         return "Helvetica"
 
+
 def build_passport_table(info, styles):
     table_data = [[Paragraph(k, styles["Normal"]), Paragraph(v, styles["Normal"])] for k, v in info.items()]
-    t = Table(table_data, colWidths=[2.7*inch, 3*inch])
-    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black),
-                           ("INNERGRID", (0,0), (-1,-1), .25, colors.grey)]))
+    t = Table(table_data, colWidths=[2.7 * inch, 3 * inch])
+    t.setStyle(
+        TableStyle(
+            [
+                ("BOX", (0, 0), (-1, -1), 1, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
+            ]
+        )
+    )
     return t
+
 
 def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     base_font = register_font()
-    doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72,
-                            topMargin=72, bottomMargin=72)
+    doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72, topMargin=72, bottomMargin=72)
     styles = getSampleStyleSheet()
     styles["Normal"].fontName = base_font
     styles.add(ParagraphStyle(name="Heading", fontName=base_font, fontSize=12, spaceAfter=6))
     story = []
+
+    # first image - friendly panda software engineer
+    story.append(panda_engineer(160))
+    story.append(Spacer(1, 12))
 
     utc = datetime.now(timezone.utc)
     loc = utc.astimezone(ZoneInfo("Asia/Shanghai"))
     story.append(Paragraph(f"协调世界时: {utc:%Y-%m-%d %H:%M:%S} UTC", styles["Normal"]))
     story.append(Paragraph(f"当地时间: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (时区: {loc.tzinfo.key})", styles["Normal"]))
     story.append(Spacer(1, 12))
-
-    story.append(panda_engineer(160)); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby(s(data["header"]["to"])), styles["Normal"]))
     story.append(Spacer(1, 6))
@@ -205,43 +221,56 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("背景说明"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["background"])), styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["background"])), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("理由说明"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["justification"])), styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["justification"])), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("请求"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["request"])), styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["request"])), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("加密偿付计划"), styles["Heading"]))
-    story.append(panda_bamboo(160)); story.append(Spacer(1, 12))
-    story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"])); story.append(Spacer(1, 24))
+    story.append(panda_bamboo(160))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"]))
+    story.append(Spacer(1, 24))
 
     story.append(Paragraph(ruby(s(data["signature"])), styles["Normal"]))
     story.append(Spacer(1, 36))
 
     story.append(Paragraph("English Translation", styles["Heading"]))
-    story.append(Paragraph(eng["header"]["to"], styles["Normal"])); story.append(Spacer(1, 6))
-    story.append(Paragraph(f"Subject: {eng['subject']}", styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(eng["header"]["to"], styles["Normal"]))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(f"Subject: {eng['subject']}", styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph("Applicant / Passport Information", styles["Heading"]))
-    story.append(build_passport_table(eng["passport"], styles)); story.append(Spacer(1, 12))
+    story.append(build_passport_table(eng["passport"], styles))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph("Background", styles["Heading"]))
-    story.append(Paragraph(eng["background"], styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(eng["background"], styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph("Justification", styles["Heading"]))
-    story.append(Paragraph(eng["justification"], styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(eng["justification"], styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph("Request", styles["Heading"]))
-    story.append(Paragraph(eng["request"], styles["Normal"])); story.append(Spacer(1, 12))
+    story.append(Paragraph(eng["request"], styles["Normal"]))
+    story.append(Spacer(1, 12))
 
     story.append(Paragraph("Cryptocurrency Recovery Plan", styles["Heading"]))
-    story.append(Paragraph(eng["crypto_plan"], styles["Normal"])); story.append(Spacer(1, 24))
+    story.append(Paragraph(eng["crypto_plan"], styles["Normal"]))
+    story.append(Spacer(1, 24))
 
     story.append(Paragraph(eng["signature"], styles["Normal"]))
 
     doc.build(story)
+
 
 if __name__ == "__main__":
     generate()

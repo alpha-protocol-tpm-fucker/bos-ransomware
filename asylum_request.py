@@ -19,8 +19,8 @@ except ModuleNotFoundError:
     subprocess.call([sys.executable, "-m", "pip", "install", "pypinyin"])
     from pypinyin import lazy_pinyin, Style
 
-def to_pinyin(t):
-    return " ".join(lazy_pinyin(t, style=Style.TONE3, errors="ignore"))
+def to_pinyin(t):  # use diacritic tone marks
+    return " ".join(lazy_pinyin(t, style=Style.TONE, errors="ignore"))
 
 data = {
     "header": {"to": "首都机场（PEK）移民官员"},

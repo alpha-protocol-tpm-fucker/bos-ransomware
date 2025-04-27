@@ -1,7 +1,14 @@
-from fpdf import FPDF
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.graphics.shapes import Drawing, Circle, Rect, Line
 import urllib.request
 
 data = {
@@ -42,46 +49,81 @@ data = {
     "signature": "Sincerely,\n\nBo Shang",
 }
 
-def s(txt):
-    return (txt.replace("’", "'").replace("“", '"').replace("”", '"')
-            .replace("–", "-").replace("—", "-"))
+def s(t):
+    return (
+        t.replace("’", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("–", "-")
+        .replace("—", "-")
+    )
 
-def add(pdf, txt=""):
-    pdf.multi_cell(0, 9, s(txt))
+def panda_engineer(sz=120):
+    d = Drawing(sz, sz)
+    d.add(Circle(sz*0.25, sz*0.85, sz*0.15, fillColor=colors.black))
+    d.add(Circle(sz*0.75, sz*0.85, sz*0.15, fillColor=colors.black))
+    d.add(Circle(sz*0.5,  sz*0.55, sz*0.35, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*0.38, sz*0.60, sz*0.10, fillColor=colors.black))
+    d.add(Circle(sz*0.62, sz*0.60, sz*0.10, fillColor=colors.black))
+    d.add(Circle(sz*0.50, sz*0.45, sz*0.05, fillColor=colors.black))
+    d.add(Rect(sz*0.20, sz*0.10, sz*0.60, sz*0.20, fillColor=colors.lightgrey, strokeColor=colors.black))
+    d.add(Rect(sz*0.22, sz*0.12, sz*0.56, sz*0.06, fillColor=colors.darkgrey))
+    return d
+
+def panda_bamboo(sz=120):
+    d = Drawing(sz, sz)
+    d.add(Circle(sz*0.25, sz*0.85, sz*0.15, fillColor=colors.black))
+    d.add(Circle(sz*0.75, sz*0.85, sz*0.15, fillColor=colors.black))
+    d.add(Circle(sz*0.5,  sz*0.55, sz*0.35, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*0.38, sz*0.60, sz*0.10, fillColor=colors.black))
+    d.add(Circle(sz*0.62, sz*0.60, sz*0.10, fillColor=colors.black))
+    d.add(Circle(sz*0.50, sz*0.45, sz*0.05, fillColor=colors.black))
+    d.add(Rect(sz*0.10, sz*0.10, sz*0.15, sz*0.60, fillColor=colors.green))
+    d.add(Line(sz*0.25, sz*0.60, sz*0.35, sz*0.70, strokeColor=colors.green))
+    d.add(Line(sz*0.25, sz*0.40, sz*0.35, sz*0.30, strokeColor=colors.green))
+    return d
+
+def register_font():
+    f = Path(__file__).with_name("DejaVuSansCondensed.ttf")
+    if not f.exists():
+        urls = [
+            "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/ttf/DejaVuSansCondensed.ttf",
+            "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/master/ttf/DejaVuSansCondensed.ttf",
+        ]
+        for u in urls:
+            try:
+                urllib.request.urlretrieve(u, f)
+                break
+            except Exception:
+                continue
+    if f.exists():
+        pdfmetrics.registerFont(TTFont("DejaVu", f.as_posix()))
+        return "DejaVu"
+    return "Helvetica"
 
 def generate(filename="Bo_Shang_Asylum_Request.pdf"):
-    pdf = FPDF(format="letter")
-    pdf.add_page()
-    pdf.set_auto_page_break(True, 15)
-    pdf.set_font("Helvetica", size=11)
-
-    fp = Path(__file__).with_name("DejaVuSansCondensed.ttf")
-    cn_font = "Helvetica"
-    if not fp.exists():
-        try:
-            url = (
-                "https://github.com/dejavu-fonts/dejavu-fonts/raw/version_2_37/ttf/"
-                "DejaVuSansCondensed.ttf"
-            )
-            urllib.request.urlretrieve(url, fp)
-        except Exception:
-            pass
-    if fp.exists():
-        pdf.add_font("DejaVu", "", fp.as_posix(), uni=True)
-        cn_font = "DejaVu"
+    base_font = register_font()
+    doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72, topMargin=72, bottomMargin=72)
+    styles = getSampleStyleSheet()
+    styles["Normal"].fontName = base_font
+    styles.add(ParagraphStyle(name="Heading", fontName="Helvetica-Bold", fontSize=12, spaceAfter=6))
+    story = []
 
     utc = datetime.now(timezone.utc)
     loc = utc.astimezone(ZoneInfo("America/New_York"))
+    story.append(Paragraph(f"UTC Time:   {utc:%Y-%m-%d %H:%M:%S} UTC", styles["Normal"]))
+    story.append(Paragraph(f"Local Time: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (Time Zone: {loc.tzinfo.key})", styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    add(pdf, f"UTC Time:   {utc:%Y-%m-%d %H:%M:%S} UTC")
-    add(pdf, f"Local Time: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()}")
-    add(pdf, f"Time Zone:  {loc.tzinfo.key}"); add(pdf)
+    story.append(panda_engineer(140))
+    story.append(Spacer(1, 12))
 
-    add(pdf, "Illustration: Panda Software Engineer"); add(pdf)
-    add(pdf, data["header"]["to"]); add(pdf)
-    add(pdf, f"Subject: {data['subject']}"); add(pdf)
+    story.append(Paragraph(s(data["header"]["to"]), styles["Normal"]))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(f"Subject: {s(data['subject'])}", styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    add(pdf, "APPLICANT DETAILS / PASSPORT INFORMATION")
+    story.append(Paragraph("APPLICANT DETAILS / PASSPORT INFORMATION", styles["Heading"]))
     labels = {
         "Name": "姓名",
         "Nationality": "国籍",
@@ -91,33 +133,33 @@ def generate(filename="Bo_Shang_Asylum_Request.pdf"):
         "Date of Issue": "签发日期",
         "Date of Expiry": "有效期至",
     }
+    table_data = [[Paragraph(f"{k}/{labels.get(k,'')}", styles["Normal"]), Paragraph(v, styles["Normal"])] for k, v in data["passport"].items()]
+    t = Table(table_data, colWidths=[2.7*inch, 3*inch])
+    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black), ("INNERGRID", (0,0), (-1,-1), 0.25, colors.grey)]))
+    story.append(t)
+    story.append(Spacer(1, 12))
 
-    y0 = pdf.get_y()
-    lm = pdf.l_margin
-    w = pdf.w - 2 * lm
-    for k, v in data["passport"].items():
-        lbl = f"{k}/{labels.get(k,'')}:" if cn_font != "Helvetica" else f"{k}:"
-        pdf.set_font(cn_font, "B", 11)
-        pdf.cell(65, 9, lbl)
-        pdf.set_font("Helvetica", "", 11)
-        pdf.cell(0, 9, v, ln=1)
-    pdf.rect(lm, y0 - 1, w, pdf.get_y() - y0 + 1); add(pdf)
+    story.append(Paragraph("BACKGROUND", styles["Heading"]))
+    story.append(Paragraph(s(data["background"]), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    add(pdf, "BACKGROUND")
-    add(pdf, data["background"]); add(pdf)
+    story.append(Paragraph("JUSTIFICATION", styles["Heading"]))
+    story.append(Paragraph(s(data["justification"]), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    add(pdf, "JUSTIFICATION")
-    add(pdf, data["justification"]); add(pdf)
+    story.append(Paragraph("REQUEST", styles["Heading"]))
+    story.append(Paragraph(s(data["request"]), styles["Normal"]))
+    story.append(Spacer(1, 12))
 
-    add(pdf, "REQUEST")
-    add(pdf, data["request"]); add(pdf)
+    story.append(Paragraph("CRYPTOGRAPHIC REPAYMENT PLAN", styles["Heading"]))
+    story.append(panda_bamboo(140))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph(s(data["crypto_plan"]), styles["Normal"]))
+    story.append(Spacer(1, 24))
 
-    add(pdf, "CRYPTOGRAPHIC REPAYMENT PLAN")
-    add(pdf, "Illustration: Panda Eating Bamboo"); add(pdf)
-    add(pdf, data["crypto_plan"]); add(pdf)
+    story.append(Paragraph(s(data["signature"]), styles["Normal"]))
 
-    add(pdf, data["signature"])
-    pdf.output(filename)
+    doc.build(story)
 
 if __name__ == "__main__":
     generate()

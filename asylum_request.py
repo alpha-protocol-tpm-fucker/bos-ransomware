@@ -1,3 +1,4 @@
+# fix: ensure Chinese glyphs render by using a built-in CJK font
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
@@ -7,6 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.graphics.shapes import Drawing, Circle, Rect, Line
 import urllib.request
@@ -87,21 +89,25 @@ def panda_bamboo(sz=120):
     return d
 
 def register_font():
-    f = Path(__file__).with_name("DejaVuSansCondensed.ttf")
-    if not f.exists():
-        for u in (
-            "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/ttf/DejaVuSansCondensed.ttf",
-            "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/master/ttf/DejaVuSansCondensed.ttf",
-        ):
-            try:
-                urllib.request.urlretrieve(u, f)
-                break
-            except Exception:
-                continue
-    if f.exists():
-        pdfmetrics.registerFont(TTFont("DejaVu", f.as_posix()))
-        return "DejaVu"
-    return "Helvetica"
+    try:
+        pdfmetrics.registerFont(UnicodeCIDFont("STSong-Light"))
+        return "STSong-Light"
+    except Exception:
+        f = Path(__file__).with_name("DejaVuSansCondensed.ttf")
+        if not f.exists():
+            for u in (
+                "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/ttf/DejaVuSansCondensed.ttf",
+                "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/master/ttf/DejaVuSansCondensed.ttf",
+            ):
+                try:
+                    urllib.request.urlretrieve(u, f)
+                    break
+                except Exception:
+                    continue
+        if f.exists():
+            pdfmetrics.registerFont(TTFont("DejaVu", f.as_posix()))
+            return "DejaVu"
+        return "Helvetica"
 
 def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     base_font = register_font()
@@ -109,7 +115,7 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
                             topMargin=72, bottomMargin=72)
     styles = getSampleStyleSheet()
     styles["Normal"].fontName = base_font
-    styles.add(ParagraphStyle(name="Heading", fontName="Helvetica-Bold", fontSize=12, spaceAfter=6))
+    styles.add(ParagraphStyle(name="Heading", fontName=base_font, fontSize=12, spaceAfter=6))
     story = []
 
     utc = datetime.now(timezone.utc)

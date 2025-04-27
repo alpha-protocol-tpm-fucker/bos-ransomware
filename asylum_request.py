@@ -9,15 +9,15 @@ from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.graphics.shapes import Drawing, Circle, Rect, Line
+from reportlab.graphics.shapes import Drawing, Circle, Rect, Line, Ellipse, Polygon
 import urllib.request
 import sys, subprocess
 
 try:
-    from pypinyin import lazy_pinyin, Style, slug
+    from pypinyin import slug, Style
 except ModuleNotFoundError:
     subprocess.call([sys.executable, "-m", "pip", "install", "pypinyin"])
-    from pypinyin import lazy_pinyin, Style, slug
+    from pypinyin import slug, Style
 
 def to_pinyin(text):
     return slug(text, style=Style.TONE, separator=" ", errors="ignore", strict=True).replace("u:", "ü")
@@ -91,37 +91,63 @@ eng = {
 }
 
 def s(t):
-    return (
-        t.replace("’", "'").replace("“", '"').replace("”", '"')
-        .replace("–", "-").replace("—", "-")
-    )
+    return t.replace("’", "'").replace("“", '"').replace("”", '"').replace("–", "-").replace("—", "-")
 
 def ruby(txt):
     return f"{txt}<br/><font size=8 color='grey'>({to_pinyin(txt)})</font>"
 
-def panda_engineer(sz=120):
+def panda_engineer(sz=160):
     d = Drawing(sz, sz)
-    d.add(Circle(sz*.25, sz*.85, sz*.15, fillColor=colors.black))
-    d.add(Circle(sz*.75, sz*.85, sz*.15, fillColor=colors.black))
-    d.add(Circle(sz*.5,  sz*.55, sz*.35, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*.38, sz*.60, sz*.10, fillColor=colors.black))
-    d.add(Circle(sz*.62, sz*.60, sz*.10, fillColor=colors.black))
-    d.add(Circle(sz*.50, sz*.45, sz*.05, fillColor=colors.black))
-    d.add(Rect(sz*.20, sz*.10, sz*.60, sz*.20, fillColor=colors.lightgrey, strokeColor=colors.black))
-    d.add(Rect(sz*.22, sz*.12, sz*.56, sz*.06, fillColor=colors.darkgrey))
+    d.add(Ellipse(sz*0.5, sz*0.35, sz*0.32, sz*0.25, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Ellipse(sz*0.28, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
+    d.add(Ellipse(sz*0.72, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
+    d.add(Ellipse(sz*0.25, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
+    d.add(Ellipse(sz*0.75, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
+    d.add(Circle(sz*0.5, sz*0.7, sz*0.3, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*0.3, sz*0.92, sz*0.14, fillColor=colors.black))
+    d.add(Circle(sz*0.7, sz*0.92, sz*0.14, fillColor=colors.black))
+    d.add(Ellipse(sz*0.4, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
+    d.add(Ellipse(sz*0.6, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
+    d.add(Circle(sz*0.4, sz*0.73, sz*0.03, fillColor=colors.white))
+    d.add(Circle(sz*0.6, sz*0.73, sz*0.03, fillColor=colors.white))
+    d.add(Circle(sz*0.5, sz*0.63, sz*0.035, fillColor=colors.black))
+    d.add(Line(sz*0.5, sz*0.61, sz*0.48, sz*0.57, strokeColor=colors.black))
+    d.add(Line(sz*0.5, sz*0.61, sz*0.52, sz*0.57, strokeColor=colors.black))
+    d.add(Rect(sz*0.28, sz*0.77, sz*0.44, sz*0.08, fillColor=colors.lightgrey, strokeColor=colors.black))
+    d.add(Rect(sz*0.24, sz*0.77, sz*0.52, sz*0.03, fillColor=colors.darkgrey, strokeColor=None))
+    for i in (0.36, 0.5, 0.64):
+        d.add(Line(sz*i, sz*0.77, sz*i, sz*0.85, strokeColor=colors.black, strokeWidth=1))
     return d
 
-def panda_bamboo(sz=120):
+def panda_bamboo(sz=160):
     d = Drawing(sz, sz)
-    d.add(Circle(sz*.25, sz*.85, sz*.15, fillColor=colors.black))
-    d.add(Circle(sz*.75, sz*.85, sz*.15, fillColor=colors.black))
-    d.add(Circle(sz*.5,  sz*.55, sz*.35, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*.38, sz*.60, sz*.10, fillColor=colors.black))
-    d.add(Circle(sz*.62, sz*.60, sz*.10, fillColor=colors.black))
-    d.add(Circle(sz*.50, sz*.45, sz*.05, fillColor=colors.black))
-    d.add(Rect(sz*.10, sz*.10, sz*.15, sz*.60, fillColor=colors.green))
-    d.add(Line(sz*.25, sz*.60, sz*.35, sz*.70, strokeColor=colors.green))
-    d.add(Line(sz*.25, sz*.40, sz*.35, sz*.30, strokeColor=colors.green))
+    d.add(Ellipse(sz*0.5, sz*0.35, sz*0.32, sz*0.25, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Ellipse(sz*0.28, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
+    d.add(Ellipse(sz*0.72, sz*0.18, sz*0.12, sz*0.08, fillColor=colors.black))
+    d.add(Ellipse(sz*0.25, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
+    d.add(Ellipse(sz*0.75, sz*0.35, sz*0.09, sz*0.06, fillColor=colors.black))
+    d.add(Circle(sz*0.5, sz*0.7, sz*0.3, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*0.3, sz*0.92, sz*0.14, fillColor=colors.black))
+    d.add(Circle(sz*0.7, sz*0.92, sz*0.14, fillColor=colors.black))
+    d.add(Ellipse(sz*0.4, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
+    d.add(Ellipse(sz*0.6, sz*0.73, sz*0.08, sz*0.11, fillColor=colors.black))
+    d.add(Circle(sz*0.4, sz*0.73, sz*0.03, fillColor=colors.white))
+    d.add(Circle(sz*0.6, sz*0.73, sz*0.03, fillColor=colors.white))
+    d.add(Circle(sz*0.5, sz*0.63, sz*0.035, fillColor=colors.black))
+    d.add(Line(sz*0.5, sz*0.61, sz*0.48, sz*0.57, strokeColor=colors.black))
+    d.add(Line(sz*0.5, sz*0.61, sz*0.52, sz*0.57, strokeColor=colors.black))
+    stalk_x = sz*0.15
+    segment_h = sz*0.12
+    for j in range(5):
+        d.add(Rect(stalk_x, sz*0.15 + j*segment_h, sz*0.08, segment_h-2, fillColor=colors.green, strokeColor=colors.darkgreen))
+        d.add(Line(stalk_x, sz*0.15 + j*segment_h, stalk_x+sz*0.08, sz*0.15 + j*segment_h, strokeColor=colors.darkgreen, strokeWidth=1))
+    leaves = [
+        [(stalk_x+sz*0.08, sz*0.55), (stalk_x+sz*0.18, sz*0.62), (stalk_x+sz*0.11, sz*0.66)],
+        [(stalk_x+sz*0.07, sz*0.42), (stalk_x+sz*0.17, sz*0.35), (stalk_x+sz*0.10, sz*0.31)],
+    ]
+    for leaf in leaves:
+        d.add(Polygon([coord for point in leaf for coord in point], fillColor=colors.green, strokeColor=colors.darkgreen))
+    d.add(Ellipse(sz*0.23, sz*0.45, sz*0.1, sz*0.07, fillColor=colors.black))
     return d
 
 def register_font():
@@ -167,7 +193,7 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Paragraph(f"当地时间: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (时区: {loc.tzinfo.key})", styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(panda_engineer(140)); story.append(Spacer(1, 12))
+    story.append(panda_engineer(160)); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby(s(data["header"]["to"])), styles["Normal"]))
     story.append(Spacer(1, 6))
@@ -188,7 +214,7 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Paragraph(ruby(s(data["request"])), styles["Normal"])); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("加密偿付计划"), styles["Heading"]))
-    story.append(panda_bamboo(140)); story.append(Spacer(1, 12))
+    story.append(panda_bamboo(160)); story.append(Spacer(1, 12))
     story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"])); story.append(Spacer(1, 24))
 
     story.append(Paragraph(ruby(s(data["signature"])), styles["Normal"]))

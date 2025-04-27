@@ -11,52 +11,55 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.graphics.shapes import Drawing, Circle, Rect, Line
 import urllib.request
 
+try:
+    from pypinyin import pinyin, Style
+    def to_pinyin(t):
+        return " ".join("".join(x) for x in pinyin(t, style=Style.TONE3))
+except Exception:
+    def to_pinyin(t):
+        return t
+
 data = {
-    "header": {"to": "Immigration Officer, Beijing Capital International Airport (PEK)"},
+    "header": {"to": "首都机场（PEK）移民官员"},
     "passport": {
         "Name": "Bo Shang",
-        "Nationality": "United States of America",
+        "Nationality": "美利坚合众国",
         "Passport No.": "596407776",
-        "Date of Birth": "06 Jun 1988",
-        "Place of Birth": "China",
-        "Date of Issue": "23 Apr 2019",
-        "Date of Expiry": "22 Apr 2029",
+        "Date of Birth": "1988年6月6日",
+        "Place of Birth": "中国",
+        "Date of Issue": "2019年4月23日",
+        "Date of Expiry": "2029年4月22日",
     },
-    "subject": "Request for Political Asylum in the People’s Republic of China",
+    "subject": "关于申请中华人民共和国政治庇护",
     "background": (
-        "Applicant, Mr. Bo Shang, has faced continual harassment and intimidation from "
-        "officials associated with the MA District Court (Woburn Division). These actions "
-        "pose a significant threat to his personal safety and freedom."
+        "申请人尚博先生持续受到马萨诸塞州联邦地区法院（沃本分院）相关人员的骚扰和恐吓，"
+        "这些行为对其人身安全和自由构成重大威胁。"
     ),
     "justification": (
-        "I respectfully request asylum under Article 32 of the Constitution of the "
-        "People’s Republic of China and relevant international conventions. I face "
-        "continuous harassment, intimidation, and threats that place my safety and "
-        "freedom at grave risk should I remain under U.S. jurisdiction. I am prepared "
-        "to cooperate fully, submit all supporting documentation, and comply with all "
-        "procedural requirements while my claim is examined."
+        "本人依据《中华人民共和国宪法》第32条及相关国际公约，恳请贵方给予政治庇护。"
+        "如继续处于美国司法管辖之下，我将面临持续骚扰、恐吓和威胁，"
+        "严重危及我的人身安全与自由。我愿意充分配合，提交所有支持文件，"
+        "并在审查期间遵守所有程序要求。"
     ),
     "request": (
-        "Please accept this application and afford me the legal protections accorded "
-        "to refugees under Chinese and international law. I am available for "
-        "interviews and ready to provide any additional information required."
+        "恳请贵方受理本申请，并依据中国及国际法律赋予我作为难民的法律保护。"
+        "我随时可接受面谈并提供任何额外信息。"
     ),
     "crypto_plan": (
-        "I will seek repayment of misappropriated assets exclusively in cryptocurrency "
-        "and will deploy encryption measures to protect sensitive files upon integration "
-        "into the network."
+        "我将仅以加密货币方式追索被侵占资产，并在接入网络后立即部署加密措施以保护敏感文件。"
     ),
-    "signature": "Sincerely,\n\nBo Shang",
+    "signature": "此致\n\n尚博 敬上",
 }
 
 def s(t):
     return (
-        t.replace("’", "'")
-        .replace("“", '"')
-        .replace("”", '"')
-        .replace("–", "-")
-        .replace("—", "-")
+        t.replace("’", "'").replace("“", '"').replace("”", '"')
+        .replace("–", "-").replace("—", "-")
     )
+
+def ruby(txt):
+    py = to_pinyin(txt)
+    return f"{txt}<br/><font size=8 color='grey'>({py})</font>"
 
 def panda_engineer(sz=120):
     d = Drawing(sz, sz)
@@ -86,11 +89,10 @@ def panda_bamboo(sz=120):
 def register_font():
     f = Path(__file__).with_name("DejaVuSansCondensed.ttf")
     if not f.exists():
-        urls = [
+        for u in (
             "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/version_2_37/ttf/DejaVuSansCondensed.ttf",
             "https://raw.githubusercontent.com/dejavu-fonts/dejavu-fonts/master/ttf/DejaVuSansCondensed.ttf",
-        ]
-        for u in urls:
+        ):
             try:
                 urllib.request.urlretrieve(u, f)
                 break
@@ -101,29 +103,30 @@ def register_font():
         return "DejaVu"
     return "Helvetica"
 
-def generate(filename="Bo_Shang_Asylum_Request.pdf"):
+def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     base_font = register_font()
-    doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72, topMargin=72, bottomMargin=72)
+    doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72,
+                            topMargin=72, bottomMargin=72)
     styles = getSampleStyleSheet()
     styles["Normal"].fontName = base_font
     styles.add(ParagraphStyle(name="Heading", fontName="Helvetica-Bold", fontSize=12, spaceAfter=6))
     story = []
 
     utc = datetime.now(timezone.utc)
-    loc = utc.astimezone(ZoneInfo("America/New_York"))
-    story.append(Paragraph(f"UTC Time:   {utc:%Y-%m-%d %H:%M:%S} UTC", styles["Normal"]))
-    story.append(Paragraph(f"Local Time: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (Time Zone: {loc.tzinfo.key})", styles["Normal"]))
+    loc = utc.astimezone(ZoneInfo("Asia/Shanghai"))
+    story.append(Paragraph(f"协调世界时: {utc:%Y-%m-%d %H:%M:%S} UTC", styles["Normal"]))
+    story.append(Paragraph(f"当地时间: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (时区: {loc.tzinfo.key})", styles["Normal"]))
     story.append(Spacer(1, 12))
 
     story.append(panda_engineer(140))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph(s(data["header"]["to"]), styles["Normal"]))
+    story.append(Paragraph(ruby(s(data["header"]["to"])), styles["Normal"]))
     story.append(Spacer(1, 6))
-    story.append(Paragraph(f"Subject: {s(data['subject'])}", styles["Normal"]))
+    story.append(Paragraph(ruby(f"主题: {s(data['subject'])}"), styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("APPLICANT DETAILS / PASSPORT INFORMATION", styles["Heading"]))
+    story.append(Paragraph(ruby("申请人信息 / 护照信息"), styles["Heading"]))
     labels = {
         "Name": "姓名",
         "Nationality": "国籍",
@@ -133,31 +136,35 @@ def generate(filename="Bo_Shang_Asylum_Request.pdf"):
         "Date of Issue": "签发日期",
         "Date of Expiry": "有效期至",
     }
-    table_data = [[Paragraph(f"{k}/{labels.get(k,'')}", styles["Normal"]), Paragraph(v, styles["Normal"])] for k, v in data["passport"].items()]
+    table_data = [
+        [Paragraph(ruby(labels[k]), styles["Normal"]), Paragraph(v, styles["Normal"])]
+        for k, v in data["passport"].items()
+    ]
     t = Table(table_data, colWidths=[2.7*inch, 3*inch])
-    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black), ("INNERGRID", (0,0), (-1,-1), 0.25, colors.grey)]))
+    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black),
+                           ("INNERGRID", (0,0), (-1,-1), 0.25, colors.grey)]))
     story.append(t)
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("BACKGROUND", styles["Heading"]))
-    story.append(Paragraph(s(data["background"]), styles["Normal"]))
+    story.append(Paragraph(ruby("背景说明"), styles["Heading"]))
+    story.append(Paragraph(ruby(s(data["background"])), styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("JUSTIFICATION", styles["Heading"]))
-    story.append(Paragraph(s(data["justification"]), styles["Normal"]))
+    story.append(Paragraph(ruby("理由说明"), styles["Heading"]))
+    story.append(Paragraph(ruby(s(data["justification"])), styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("REQUEST", styles["Heading"]))
-    story.append(Paragraph(s(data["request"]), styles["Normal"]))
+    story.append(Paragraph(ruby("请求"), styles["Heading"]))
+    story.append(Paragraph(ruby(s(data["request"])), styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(Paragraph("CRYPTOGRAPHIC REPAYMENT PLAN", styles["Heading"]))
+    story.append(Paragraph(ruby("加密偿付计划"), styles["Heading"]))
     story.append(panda_bamboo(140))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(s(data["crypto_plan"]), styles["Normal"]))
+    story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"]))
     story.append(Spacer(1, 24))
 
-    story.append(Paragraph(s(data["signature"]), styles["Normal"]))
+    story.append(Paragraph(ruby(s(data["signature"])), styles["Normal"]))
 
     doc.build(story)
 

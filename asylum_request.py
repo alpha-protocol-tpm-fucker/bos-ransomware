@@ -1,4 +1,3 @@
-# fix: ensure Chinese glyphs render by using a built-in CJK font
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
@@ -12,14 +11,16 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.graphics.shapes import Drawing, Circle, Rect, Line
 import urllib.request
+import sys, subprocess
 
 try:
-    from pypinyin import pinyin, Style
-    def to_pinyin(t):
-        return " ".join("".join(x) for x in pinyin(t, style=Style.TONE3))
-except Exception:
-    def to_pinyin(t):
-        return t
+    from pypinyin import lazy_pinyin, Style
+except ModuleNotFoundError:
+    subprocess.call([sys.executable, "-m", "pip", "install", "pypinyin"])
+    from pypinyin import lazy_pinyin, Style
+
+def to_pinyin(t):
+    return " ".join(lazy_pinyin(t, style=Style.TONE3, errors="ignore"))
 
 data = {
     "header": {"to": "首都机场（PEK）移民官员"},
@@ -53,6 +54,42 @@ data = {
     "signature": "此致\n\n尚博 敬上",
 }
 
+eng = {
+    "header": {"to": "To: Immigration Officer, Beijing Capital Airport (PEK)"},
+    "passport": {
+        "Name": "Bo Shang",
+        "Nationality": "United States of America",
+        "Passport No.": "596407776",
+        "Date of Birth": "6 June 1988",
+        "Place of Birth": "China",
+        "Date of Issue": "23 April 2019",
+        "Date of Expiry": "22 April 2029",
+    },
+    "subject": "Regarding the Application for Political Asylum in the People's Republic of China",
+    "background": (
+        "Mr. Shang Bo has been continuously harassed and intimidated by personnel associated with the "
+        "United States District Court for the District of Massachusetts (Woburn Division), actions that "
+        "pose a significant threat to his personal safety and freedom."
+    ),
+    "justification": (
+        "Pursuant to Article 32 of the Constitution of the People's Republic of China and relevant international "
+        "conventions, I respectfully request political asylum from your authority. If I remain under United States "
+        "jurisdiction, I will continue to face harassment, intimidation, and threats, severely endangering my personal "
+        "safety and freedom. I am willing to fully cooperate, submit all supporting documents, and comply with all "
+        "procedural requirements during the review period."
+    ),
+    "request": (
+        "I respectfully request that you accept this application and, in accordance with Chinese and international law, "
+        "grant me the legal protection afforded to refugees. I am available for an interview at any time and can provide "
+        "any additional information."
+    ),
+    "crypto_plan": (
+        "I will pursue the recovery of misappropriated assets solely through cryptocurrency and will immediately deploy "
+        "encryption measures upon network access to safeguard sensitive files."
+    ),
+    "signature": "Sincerely,\n\nShang Bo",
+}
+
 def s(t):
     return (
         t.replace("’", "'").replace("“", '"').replace("”", '"')
@@ -65,27 +102,27 @@ def ruby(txt):
 
 def panda_engineer(sz=120):
     d = Drawing(sz, sz)
-    d.add(Circle(sz*0.25, sz*0.85, sz*0.15, fillColor=colors.black))
-    d.add(Circle(sz*0.75, sz*0.85, sz*0.15, fillColor=colors.black))
-    d.add(Circle(sz*0.5,  sz*0.55, sz*0.35, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*0.38, sz*0.60, sz*0.10, fillColor=colors.black))
-    d.add(Circle(sz*0.62, sz*0.60, sz*0.10, fillColor=colors.black))
-    d.add(Circle(sz*0.50, sz*0.45, sz*0.05, fillColor=colors.black))
-    d.add(Rect(sz*0.20, sz*0.10, sz*0.60, sz*0.20, fillColor=colors.lightgrey, strokeColor=colors.black))
-    d.add(Rect(sz*0.22, sz*0.12, sz*0.56, sz*0.06, fillColor=colors.darkgrey))
+    d.add(Circle(sz*.25, sz*.85, sz*.15, fillColor=colors.black))
+    d.add(Circle(sz*.75, sz*.85, sz*.15, fillColor=colors.black))
+    d.add(Circle(sz*.5,  sz*.55, sz*.35, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*.38, sz*.60, sz*.10, fillColor=colors.black))
+    d.add(Circle(sz*.62, sz*.60, sz*.10, fillColor=colors.black))
+    d.add(Circle(sz*.50, sz*.45, sz*.05, fillColor=colors.black))
+    d.add(Rect(sz*.20, sz*.10, sz*.60, sz*.20, fillColor=colors.lightgrey, strokeColor=colors.black))
+    d.add(Rect(sz*.22, sz*.12, sz*.56, sz*.06, fillColor=colors.darkgrey))
     return d
 
 def panda_bamboo(sz=120):
     d = Drawing(sz, sz)
-    d.add(Circle(sz*0.25, sz*0.85, sz*0.15, fillColor=colors.black))
-    d.add(Circle(sz*0.75, sz*0.85, sz*0.15, fillColor=colors.black))
-    d.add(Circle(sz*0.5,  sz*0.55, sz*0.35, fillColor=colors.white, strokeColor=colors.black))
-    d.add(Circle(sz*0.38, sz*0.60, sz*0.10, fillColor=colors.black))
-    d.add(Circle(sz*0.62, sz*0.60, sz*0.10, fillColor=colors.black))
-    d.add(Circle(sz*0.50, sz*0.45, sz*0.05, fillColor=colors.black))
-    d.add(Rect(sz*0.10, sz*0.10, sz*0.15, sz*0.60, fillColor=colors.green))
-    d.add(Line(sz*0.25, sz*0.60, sz*0.35, sz*0.70, strokeColor=colors.green))
-    d.add(Line(sz*0.25, sz*0.40, sz*0.35, sz*0.30, strokeColor=colors.green))
+    d.add(Circle(sz*.25, sz*.85, sz*.15, fillColor=colors.black))
+    d.add(Circle(sz*.75, sz*.85, sz*.15, fillColor=colors.black))
+    d.add(Circle(sz*.5,  sz*.55, sz*.35, fillColor=colors.white, strokeColor=colors.black))
+    d.add(Circle(sz*.38, sz*.60, sz*.10, fillColor=colors.black))
+    d.add(Circle(sz*.62, sz*.60, sz*.10, fillColor=colors.black))
+    d.add(Circle(sz*.50, sz*.45, sz*.05, fillColor=colors.black))
+    d.add(Rect(sz*.10, sz*.10, sz*.15, sz*.60, fillColor=colors.green))
+    d.add(Line(sz*.25, sz*.60, sz*.35, sz*.70, strokeColor=colors.green))
+    d.add(Line(sz*.25, sz*.40, sz*.35, sz*.30, strokeColor=colors.green))
     return d
 
 def register_font():
@@ -109,6 +146,13 @@ def register_font():
             return "DejaVu"
         return "Helvetica"
 
+def build_passport_table(info, styles):
+    table_data = [[Paragraph(k, styles["Normal"]), Paragraph(v, styles["Normal"])] for k, v in info.items()]
+    t = Table(table_data, colWidths=[2.7*inch, 3*inch])
+    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black),
+                           ("INNERGRID", (0,0), (-1,-1), .25, colors.grey)]))
+    return t
+
 def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     base_font = register_font()
     doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72,
@@ -124,8 +168,7 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Paragraph(f"当地时间: {loc:%Y-%m-%d %H:%M:%S} {loc.tzname()} (时区: {loc.tzinfo.key})", styles["Normal"]))
     story.append(Spacer(1, 12))
 
-    story.append(panda_engineer(140))
-    story.append(Spacer(1, 12))
+    story.append(panda_engineer(140)); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby(s(data["header"]["to"])), styles["Normal"]))
     story.append(Spacer(1, 6))
@@ -133,44 +176,45 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("申请人信息 / 护照信息"), styles["Heading"]))
-    labels = {
-        "Name": "姓名",
-        "Nationality": "国籍",
-        "Passport No.": "护照号码",
-        "Date of Birth": "出生日期",
-        "Place of Birth": "出生地点",
-        "Date of Issue": "签发日期",
-        "Date of Expiry": "有效期至",
-    }
-    table_data = [
-        [Paragraph(ruby(labels[k]), styles["Normal"]), Paragraph(v, styles["Normal"])]
-        for k, v in data["passport"].items()
-    ]
-    t = Table(table_data, colWidths=[2.7*inch, 3*inch])
-    t.setStyle(TableStyle([("BOX", (0,0), (-1,-1), 1, colors.black),
-                           ("INNERGRID", (0,0), (-1,-1), 0.25, colors.grey)]))
-    story.append(t)
+    story.append(build_passport_table({ruby(k): v for k, v in data["passport"].items()}, styles))
     story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("背景说明"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["background"])), styles["Normal"]))
-    story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["background"])), styles["Normal"])); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("理由说明"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["justification"])), styles["Normal"]))
-    story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["justification"])), styles["Normal"])); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("请求"), styles["Heading"]))
-    story.append(Paragraph(ruby(s(data["request"])), styles["Normal"]))
-    story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["request"])), styles["Normal"])); story.append(Spacer(1, 12))
 
     story.append(Paragraph(ruby("加密偿付计划"), styles["Heading"]))
-    story.append(panda_bamboo(140))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"]))
-    story.append(Spacer(1, 24))
+    story.append(panda_bamboo(140)); story.append(Spacer(1, 12))
+    story.append(Paragraph(ruby(s(data["crypto_plan"])), styles["Normal"])); story.append(Spacer(1, 24))
 
     story.append(Paragraph(ruby(s(data["signature"])), styles["Normal"]))
+    story.append(Spacer(1, 36))
+
+    story.append(Paragraph("English Translation", styles["Heading"]))
+    story.append(Paragraph(eng["header"]["to"], styles["Normal"])); story.append(Spacer(1, 6))
+    story.append(Paragraph(f"Subject: {eng['subject']}", styles["Normal"])); story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Applicant / Passport Information", styles["Heading"]))
+    story.append(build_passport_table(eng["passport"], styles)); story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Background", styles["Heading"]))
+    story.append(Paragraph(eng["background"], styles["Normal"])); story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Justification", styles["Heading"]))
+    story.append(Paragraph(eng["justification"], styles["Normal"])); story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Request", styles["Heading"]))
+    story.append(Paragraph(eng["request"], styles["Normal"])); story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Cryptocurrency Recovery Plan", styles["Heading"]))
+    story.append(Paragraph(eng["crypto_plan"], styles["Normal"])); story.append(Spacer(1, 24))
+
+    story.append(Paragraph(eng["signature"], styles["Normal"]))
 
     doc.build(story)
 

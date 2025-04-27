@@ -14,13 +14,13 @@ import urllib.request
 import sys, subprocess
 
 try:
-    from pypinyin import lazy_pinyin, Style
+    from pypinyin import lazy_pinyin, Style, slug
 except ModuleNotFoundError:
     subprocess.call([sys.executable, "-m", "pip", "install", "pypinyin"])
-    from pypinyin import lazy_pinyin, Style
+    from pypinyin import lazy_pinyin, Style, slug
 
-def to_pinyin(t):  # use diacritic tone marks
-    return " ".join(lazy_pinyin(t, style=Style.TONE, errors="ignore"))
+def to_pinyin(text):
+    return slug(text, style=Style.TONE, separator=" ", errors="ignore", strict=True).replace("u:", "ü")
 
 data = {
     "header": {"to": "首都机场（PEK）移民官员"},
@@ -97,8 +97,7 @@ def s(t):
     )
 
 def ruby(txt):
-    py = to_pinyin(txt)
-    return f"{txt}<br/><font size=8 color='grey'>({py})</font>"
+    return f"{txt}<br/><font size=8 color='grey'>({to_pinyin(txt)})</font>"
 
 def panda_engineer(sz=120):
     d = Drawing(sz, sz)

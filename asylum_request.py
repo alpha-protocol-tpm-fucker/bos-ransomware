@@ -1,3 +1,7 @@
+# Disclaimer: The allegations presented here have not been adjudicated. They are
+# included solely for illustrative legal-argument drafting. Consult qualified counsel
+# before relying on or filing any portion of this document.
+
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
@@ -70,7 +74,7 @@ eng = {
     "subject": "Regarding the Application for Political Asylum in the People's Republic of China",
     "background": (
         "Mr. Shang Bo has been continuously harassed and intimidated by personnel associated with the "
-        "United States District Court for the District of Massachusetts (Woburn Division), actions that "
+        "MA District Court (Woburn Division), actions that "
         "pose a significant threat to his personal safety and freedom."
     ),
     "justification": (
@@ -193,6 +197,69 @@ def build_passport_table(info, styles):
     return t
 
 
+def add_legal_arguments(story, styles):
+    prelim = (
+        "The following arguments are drafted on the basis of allegations that remain unverified. "
+        "They do not constitute a finding of fact and are provided for legal-theory discussion."
+    )
+    legal = [
+        {
+            "title": "I. T-Mobile’s Alleged Interference with Internet Access",
+            "body": (
+                "Under 47 U.S.C. § 201(b) and § 202(a) the Communications Act prohibits common carriers from engaging "
+                "in unjust, unreasonable, or unreasonably discriminatory practices. Intentional throttling or denial "
+                "of service, if proven, may therefore expose T-Mobile to injunctive relief and damages. Where such "
+                "interference rises to intentional unauthorized access or damage to a protected computer system, "
+                "the Computer Fraud and Abuse Act, 18 U.S.C. § 1030(g), provides a private civil cause of action "
+                "for compensatory damages, injunctive relief, and attorney’s fees."
+            ),
+        },
+        {
+            "title": "II. Twitch: Cyber-Harassment and Religious Discrimination",
+            "body": (
+                "Twitch’s alleged targeted cyberattacks could support tort claims for intrusion upon seclusion and "
+                "intentional infliction of emotional distress under state common law. Additionally, if Twitch’s "
+                "content-moderation or messaging policies discriminate on the basis of religion, a claim could be "
+                "brought under 42 U.S.C. § 2000a et seq. (public accommodations) or relevant state civil-rights "
+                "statutes, subject to Twitch’s status as a place of public accommodation in the jurisdiction."
+            ),
+        },
+        {
+            "title": "III. Google: Antitrust and Tortious Interference",
+            "body": (
+                "Google’s alleged use of market power in AI to exclude or penalize developers may constitute "
+                "monopolization or attempted monopolization under § 2 of the Sherman Act, 15 U.S.C. § 2. A plaintiff "
+                "must show (1) monopoly power in a relevant market and (2) exclusionary conduct. If counsel "
+                "were to advance arguments that knowingly contradict controlling precedent, such conduct could be "
+                "sanctionable under Fed. R. Civ. P. 11(c) and may invite a court’s contempt powers. Related common-law "
+                "claims include tortious interference with prospective economic advantage."
+            ),
+        },
+        {
+            "title": "IV. Authorization to Satisfy Judgment via Cryptographic Assets",
+            "body": (
+                "Federal courts possess equitable power to fashion remedies that include the turnover of assets "
+                "in any form capable of satisfying a money judgment. Fed. R. Civ. P. 69(a) incorporates state "
+                "collection procedures, many of which (e.g., Wyo. Stat. § 34-29-101) expressly recognize "
+                "cryptocurrency as property. Executive Order 14067 and the Treasury’s 2023 ‘Illicit Finance Risk "
+                "Assessment of Decentralized Finance’ acknowledge digital assets as lawful mediums of exchange. "
+                "Accordingly, a court may order defendants—or the United States in a Federal Tort Claims Act action, "
+                "28 U.S.C. §§ 1346(b), 2671-80—to satisfy an award through transfer of designated cryptocurrency "
+                "to a court-controlled wallet, provided such transfer complies with 31 C.F.R. pt. 1010 (FinCEN) and "
+                "OFAC sanctions programs."
+            ),
+        },
+    ]
+    story.append(Spacer(1, 24))
+    story.append(Paragraph("Legal Arguments", styles["Heading"]))
+    story.append(Paragraph(prelim, styles["Normal"]))
+    story.append(Spacer(1, 12))
+    for sec in legal:
+        story.append(Paragraph(sec["title"], styles["Heading"]))
+        story.append(Paragraph(sec["body"], styles["Normal"]))
+        story.append(Spacer(1, 12))
+
+
 def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     base_font = register_font()
     doc = SimpleDocTemplate(filename, pagesize=letter, leftMargin=72, rightMargin=72, topMargin=72, bottomMargin=72)
@@ -201,7 +268,6 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     styles.add(ParagraphStyle(name="Heading", fontName=base_font, fontSize=12, spaceAfter=6))
     story = []
 
-    # first image - friendly panda software engineer
     story.append(panda_engineer(160))
     story.append(Spacer(1, 12))
 
@@ -268,6 +334,8 @@ def generate(filename="Bo_Shang_Asylum_Request_CN_PY.pdf"):
     story.append(Spacer(1, 24))
 
     story.append(Paragraph(eng["signature"], styles["Normal"]))
+
+    add_legal_arguments(story, styles)
 
     doc.build(story)
 

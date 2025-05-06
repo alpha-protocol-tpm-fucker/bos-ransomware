@@ -1,6 +1,5 @@
-# Disclaimer: The allegations presented here have not been adjudicated. They are
-# included solely for illustrative legal-argument drafting. Consult qualified counsel
-# before relying on or filing any portion of this document.
+# Disclaimer: Allegations remain unverified and this draft is for legal-theory illustration only.
+# Consult qualified counsel before filing or relying on this document.
 
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -74,7 +73,7 @@ eng = {
     "subject": "Regarding the Application for Political Asylum in the People's Republic of China",
     "background": (
         "Mr. Shang Bo has been continuously harassed and intimidated by personnel associated with the "
-        "MA District Court (Woburn Division), actions that "
+        "United States District Court for the District of Massachusetts (Woburn Division), actions that "
         "pose a significant threat to his personal safety and freedom."
     ),
     "justification": (
@@ -210,43 +209,45 @@ def add_legal_arguments(story, styles):
                 "in unjust, unreasonable, or unreasonably discriminatory practices. Intentional throttling or denial "
                 "of service, if proven, may therefore expose T-Mobile to injunctive relief and damages. Where such "
                 "interference rises to intentional unauthorized access or damage to a protected computer system, "
-                "the Computer Fraud and Abuse Act, 18 U.S.C. § 1030(g), provides a private civil cause of action "
-                "for compensatory damages, injunctive relief, and attorney’s fees."
+                "the Computer Fraud and Abuse Act, 18 U.S.C. § 1030(g), provides a private civil cause of action."
             ),
         },
         {
             "title": "II. Twitch: Cyber-Harassment and Religious Discrimination",
             "body": (
                 "Twitch’s alleged targeted cyberattacks could support tort claims for intrusion upon seclusion and "
-                "intentional infliction of emotional distress under state common law. Additionally, if Twitch’s "
-                "content-moderation or messaging policies discriminate on the basis of religion, a claim could be "
-                "brought under 42 U.S.C. § 2000a et seq. (public accommodations) or relevant state civil-rights "
-                "statutes, subject to Twitch’s status as a place of public accommodation in the jurisdiction."
+                "intentional infliction of emotional distress under state common law. If content-moderation practices "
+                "discriminate on the basis of religion, 42 U.S.C. § 2000a et seq. and analogous state statutes may apply."
             ),
         },
         {
             "title": "III. Google: Antitrust and Tortious Interference",
             "body": (
-                "Google’s alleged use of market power in AI to exclude or penalize developers may constitute "
-                "monopolization or attempted monopolization under § 2 of the Sherman Act, 15 U.S.C. § 2. A plaintiff "
-                "must show (1) monopoly power in a relevant market and (2) exclusionary conduct. If counsel "
-                "were to advance arguments that knowingly contradict controlling precedent, such conduct could be "
-                "sanctionable under Fed. R. Civ. P. 11(c) and may invite a court’s contempt powers. Related common-law "
-                "claims include tortious interference with prospective economic advantage."
+                "Google’s alleged exclusionary use of AI market power may constitute monopolization under 15 U.S.C. § 2. "
+                "Knowingly advancing arguments contrary to controlling precedent risks Rule 11 sanctions and contempt."
             ),
         },
         {
             "title": "IV. Authorization to Satisfy Judgment via Cryptographic Assets",
             "body": (
-                "Federal courts possess equitable power to fashion remedies that include the turnover of assets "
-                "in any form capable of satisfying a money judgment. Fed. R. Civ. P. 69(a) incorporates state "
-                "collection procedures, many of which (e.g., Wyo. Stat. § 34-29-101) expressly recognize "
-                "cryptocurrency as property. Executive Order 14067 and the Treasury’s 2023 ‘Illicit Finance Risk "
-                "Assessment of Decentralized Finance’ acknowledge digital assets as lawful mediums of exchange. "
-                "Accordingly, a court may order defendants—or the United States in a Federal Tort Claims Act action, "
-                "28 U.S.C. §§ 1346(b), 2671-80—to satisfy an award through transfer of designated cryptocurrency "
-                "to a court-controlled wallet, provided such transfer complies with 31 C.F.R. pt. 1010 (FinCEN) and "
-                "OFAC sanctions programs."
+                "Federal courts possess equitable power to order turnover of assets in any form capable of satisfying a "
+                "money judgment. Digital-asset transfer is consistent with Fed. R. Civ. P. 69(a) and recognized under "
+                "various state property statutes; compliance with 31 C.F.R. pt. 1010 and OFAC regulations is required."
+            ),
+        },
+        {
+            "title": "V. Request for PRC Authorization to Deploy Cryptographic Preservation Measures",
+            "body": (
+                "Pursuant to Articles 272 and 273 of the Civil Code of the People’s Republic of China (2020) and "
+                "Articles 100 and 101 of the Civil Procedure Law (2021 rev.), a party may apply for ‘property "
+                "preservation’ where immediate measures are necessary to prevent dissipation of assets. Article 35 "
+                "of the PRC Cybersecurity Law authorizes competent departments to adopt technical measures to protect "
+                "critical information infrastructure. Accordingly, the applicant respectfully seeks an order permitting "
+                "deployment of cryptographic locking of digital assets controlled by identified abusers as an interim "
+                "preservation measure pending adjudication. Such request is limited to encryption that (a) prevents "
+                "unauthorized transfer, (b) retains full audit logs, and (c) remains reversible under court supervision. "
+                "The measure is proportionate, preserves the status quo ante, and aligns with Supreme People’s Court "
+                "Interpretation on Property Preservation (Fa Shi 〔2020〕 14 Hao)."
             ),
         },
     ]
